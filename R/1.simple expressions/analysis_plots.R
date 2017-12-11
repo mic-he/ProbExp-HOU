@@ -175,6 +175,43 @@ colnames(df.samples)=c("alpha","alpha_ax","beta","beta_ax","lambda","theta.possi
 
 write.csv(df.samples,"df_samples.csv",row.names = FALSE)
 
+## plot cumulative distributions for theta parameters
+x.pos <- density(df.samples$theta.possibly)$x
+y.pos <- cumsum(density(df.samples$theta.possibly)$y)
+x.pro <- density(df.samples$theta.probably)$x
+y.pro <- cumsum(density(df.samples$theta.probably)$y)
+x.cer <- density(df.samples$theta.certainly)$x
+y.cer <- cumsum(density(df.samples$theta.certainly)$y)
+# data frame
+df.cs.th <- as.data.frame(cbind(x.pos, y.pos, x.pro, y.pro, x.cer, y.cer))
+# plot
+cs.plot <- ggplot(data=df.cs.th[seq(1, nrow(df.cs.th), 15), ])+
+  geom_point(aes(x=x.pos, y=y.pos/max(y.pos), color='pos', shape='pos'), size=3)+
+  geom_line(aes(x=x.pos, y=y.pos/max(y.pos), color='pos'))+
+  geom_vline(xintercept=mean(df.samples$theta.possibly))+
+  annotate("text", x=0.15, y=1, label = paste0("mean=", round(mean(df.samples$theta.possibly),3)), size = 5)+
+  geom_point(aes(x=x.pro, y=y.pro/max(y.pro), color='pro', shape='pro'), size=3)+
+  geom_line(aes(x=x.pro, y=y.pro/max(y.pro), color='pro'))+
+  geom_vline(xintercept=mean(df.samples$theta.probably))+
+  annotate("text", x=0.45, y=1, label = paste0("mean=", round(mean(df.samples$theta.probably),3)), size = 5)+
+  geom_point(aes(x=x.cer, y=y.cer/max(y.cer), color='cer', shape='cer'), size=3)+
+  geom_line(aes(x=x.cer, y=y.cer/max(y.cer), color='cer'))+
+  geom_vline(xintercept=mean(df.samples$theta.certainly))+
+  annotate("text", x=0.85, y=1, label = paste0("mean=", round(mean(df.samples$theta.certainly),3)), size = 5)+
+  xlab("P(s)")+
+  ylab("cumulative density")+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        text=element_text(size=22),
+        legend.position = "bottom")+
+  scale_colour_manual(name="expression",
+                      values=c("pos" = "firebrick", "pro"="forestgreen", "cer"="dodgerblue4"),
+                      labels=c("pos"="possibly","pro"="probably", "cer"="certainly"))+
+  scale_shape_manual(name="expression",
+                     values=c("pos" = 15, "pro"=16, "cer"=17),
+                     labels=c("pos"="possibly","pro"="probably", "cer"="certainly"))
+show(cs.plot)
+
 
 # once the df is saved, we can start from here:
 samples=read.csv("df_samples.csv")
@@ -196,49 +233,6 @@ mean(samples$theta.probably)
 HDIofMCMC(samples$theta.probably)
 mean(samples$theta.certainly)
 HDIofMCMC(samples$theta.certainly)
-
-## plot cumulative distributions for theta parameters
-# probably
-df.probably <- as.data.frame(cbind(density(samples$theta.probably)$x, cumsum(density(samples$theta.probably)$y)))
-colnames(df.probably) <- c("x", "y")
-pro <- ggplot(data=df.probably, aes(x=x, y=y/max(y)))+
-  geom_area(color="lightgrey", alpha=0.66)+
-  geom_vline(xintercept=mean(samples$theta.probably))+
-  annotate("text", x=0.52, y=1, label = paste0("mean=", round(mean(samples$theta.probably),3)), size = 5)+
-  xlab("theta.probably")+
-  theme_bw()+
-  theme(strip.background = element_blank(),text=element_text(size=22), axis.title.y = element_blank())
-show(pro)
-
-# possibly
-df.possibly <- as.data.frame(cbind(density(samples$theta.possibly)$x, cumsum(density(samples$theta.possibly)$y)))
-colnames(df.possibly) <- c("x", "y")
-pos <- ggplot(data=df.possibly, aes(x=x, y=y/max(y)))+
-  geom_area(color="lightgrey", alpha=0.66)+
-  geom_vline(xintercept=mean(samples$theta.possibly))+
-  annotate("text", x=0.2, y=1, label = paste0("mean=", round(mean(samples$theta.possibly),3)), size = 5)+
-  xlab("theta.possibly")+
-  theme_bw()+
-  theme(strip.background = element_blank(),text=element_text(size=22), axis.title.y = element_blank())
-show(pos)
-
-# certainly
-df.certainly <- as.data.frame(cbind(density(samples$theta.certainly)$x, cumsum(density(samples$theta.certainly)$y)))
-colnames(df.certainly) <- c("x", "y")
-cer <- ggplot(data=df.certainly, aes(x=x, y=y/max(y)))+
-  geom_area(color="lightgrey", alpha=0.66)+
-  geom_vline(xintercept=mean(samples$theta.certainly))+
-  annotate("text", x=0.9, y=1, label = paste0("mean=", round(mean(samples$theta.certainly),3)), size = 5)+
-  xlab("theta.certainly")+
-  theme_bw()+
-  theme(strip.background = element_blank(),text=element_text(size=22), axis.title.y = element_blank())
-show(cer)
-
-# put them together
-cumul <- grid.arrange(cer,pro,pos, ncol = 3,
-                      left=textGrob("cumulative density", gp=gpar(fontsize=22), rot = 90, just = "centre")) 
-show(cumul)
-
 
 ## Generate model predictions: for each row of the JAGS output we run our prediction functions instantiating the parameters to the estimated values
 # init arrays to fill with predictions and bayesian posterior predcitive (fake simulated data)
