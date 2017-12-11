@@ -7,3 +7,5 @@ Public repository for the paper ''Complex probability expressions & high-order u
 - Data: raw data (anonymized) as CSV files.
 
 - R: scripts for data cleaning, exploration and visualizations, as well as (Bayesian) data analysis and JAGS implementation of the models.
+
+![urns.png](https://github.com/mic-he/ProbExp-HOU/blob/master/urns.png)
