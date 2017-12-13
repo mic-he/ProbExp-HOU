@@ -152,6 +152,10 @@ parameters=c("alpha",
              "alpha_ax",
              "beta",
              "beta_ax",
+             "kappa",
+             "kappa_ax",
+             "omega",
+             "omega_ax",
              "lambda",
              "theta.might",
              "theta.probably",
@@ -176,14 +180,20 @@ alpha=j.samples$BUGSoutput$sims.list$alpha
 alpha_ax=j.samples$BUGSoutput$sims.list$alpha_ax
 beta=j.samples$BUGSoutput$sims.list$beta
 beta_ax=j.samples$BUGSoutput$sims.list$beta_ax
+kappa=j.samples$BUGSoutput$sims.list$kappa
+kappa_ax=j.samples$BUGSoutput$sims.list$kappa_ax
+omega=j.samples$BUGSoutput$sims.list$omega
+omega_ax=j.samples$BUGSoutput$sims.list$omega_ax
 lambda=j.samples$BUGSoutput$sims.list$lambda
+
 theta.might=j.samples$BUGSoutput$sims.list$theta.might
 theta.probably=j.samples$BUGSoutput$sims.list$theta.probably
 theta.certainly=j.samples$BUGSoutput$sims.list$theta.certainly
 
 # save parameters as data frame so that we don't need to run jags every time
-df.samples=as.data.frame(cbind(alpha,alpha_ax,beta,beta_ax,lambda,theta.might,theta.probably,theta.certainly))
-colnames(df.samples)=c("alpha","alpha_ax","beta","beta_ax","lambda","theta.might","theta.probably","theta.certainly")
+df.samples=as.data.frame(cbind(alpha,alpha_ax,beta,beta_ax,kappa,kappa_ax,omega,omega_ax,lambda,theta.might,theta.probably,theta.certainly))
+colnames(df.samples)=c("alpha","alpha_ax","beta","beta_ax","kappa","kappa_ax","omega","omega_ax","lambda","theta.might","theta.probably","theta.certainly")
+
 write.csv(df.samples,"df_samples.csv",row.names = FALSE)
 
 
@@ -199,8 +209,20 @@ mean(samples$beta)
 HDIofMCMC(samples$beta)
 mean(samples$beta_ax)
 HDIofMCMC(samples$beta_ax)
+
+mean(samples$kappa)
+HDIofMCMC(samples$kappa)
+mean(samples$kappa_ax)
+HDIofMCMC(samples$kappa_ax)
+
+mean(samples$omega)
+HDIofMCMC(samples$omega)
+mean(samples$omega_ax)
+HDIofMCMC(samples$omega_ax)
+
 mean(samples$lambda)
 HDIofMCMC(samples$lambda)
+
 mean(samples$theta.might)
 HDIofMCMC(samples$theta.might)
 mean(samples$theta.probably)

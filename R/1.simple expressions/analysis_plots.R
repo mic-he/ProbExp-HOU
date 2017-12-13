@@ -141,6 +141,10 @@ parameters=c("alpha",
              "alpha_ax",
              "beta",
              "beta_ax",
+             "kappa",
+             "kappa_ax",
+             "omega",
+             "omega_ax",
              "lambda",
              "theta.possibly",
              "theta.probably",
@@ -164,14 +168,19 @@ alpha=j.samples$BUGSoutput$sims.list$alpha
 alpha_ax=j.samples$BUGSoutput$sims.list$alpha_ax
 beta=j.samples$BUGSoutput$sims.list$beta
 beta_ax=j.samples$BUGSoutput$sims.list$beta_ax
+kappa=j.samples$BUGSoutput$sims.list$kappa
+kappa_ax=j.samples$BUGSoutput$sims.list$kappa_ax
+omega=j.samples$BUGSoutput$sims.list$omega
+omega_ax=j.samples$BUGSoutput$sims.list$omega_ax
 lambda=j.samples$BUGSoutput$sims.list$lambda
+
 theta.possibly=j.samples$BUGSoutput$sims.list$theta.possibly
 theta.probably=j.samples$BUGSoutput$sims.list$theta.probably
 theta.certainly=j.samples$BUGSoutput$sims.list$theta.certainly
 
 # save parameters as data frame so that we don't need to run jags every time
-df.samples=as.data.frame(cbind(alpha,alpha_ax,beta,beta_ax,lambda,theta.possibly,theta.probably,theta.certainly))
-colnames(df.samples)=c("alpha","alpha_ax","beta","beta_ax","lambda","theta.possibly","theta.probably","theta.certainly")
+df.samples=as.data.frame(cbind(alpha,alpha_ax,beta,beta_ax,kappa,kappa_ax,omega,omega_ax,lambda,theta.possibly,theta.probably,theta.certainly))
+colnames(df.samples)=c("alpha","alpha_ax","beta","beta_ax","kappa","kappa_ax","omega","omega_ax","lambda","theta.possibly","theta.probably","theta.certainly")
 
 write.csv(df.samples,"df_samples.csv",row.names = FALSE)
 
@@ -189,15 +198,15 @@ cs.plot <- ggplot(data=df.cs.th[seq(1, nrow(df.cs.th), 15), ])+
   geom_point(aes(x=x.pos, y=y.pos/max(y.pos), color='pos', shape='pos'), size=3)+
   geom_line(aes(x=x.pos, y=y.pos/max(y.pos), color='pos'))+
   geom_vline(xintercept=mean(df.samples$theta.possibly))+
-  annotate("text", x=0.15, y=1, label = paste0("mean=", round(mean(df.samples$theta.possibly),3)), size = 5)+
+  annotate("text", x=0.175, y=1, label = paste0("mean=", round(mean(df.samples$theta.possibly),3)), size = 5)+
   geom_point(aes(x=x.pro, y=y.pro/max(y.pro), color='pro', shape='pro'), size=3)+
   geom_line(aes(x=x.pro, y=y.pro/max(y.pro), color='pro'))+
   geom_vline(xintercept=mean(df.samples$theta.probably))+
-  annotate("text", x=0.45, y=1, label = paste0("mean=", round(mean(df.samples$theta.probably),3)), size = 5)+
+  annotate("text", x=0.475, y=1, label = paste0("mean=", round(mean(df.samples$theta.probably),3)), size = 5)+
   geom_point(aes(x=x.cer, y=y.cer/max(y.cer), color='cer', shape='cer'), size=3)+
   geom_line(aes(x=x.cer, y=y.cer/max(y.cer), color='cer'))+
   geom_vline(xintercept=mean(df.samples$theta.certainly))+
-  annotate("text", x=0.85, y=1, label = paste0("mean=", round(mean(df.samples$theta.certainly),3)), size = 5)+
+  annotate("text", x=0.875, y=1, label = paste0("mean=", round(mean(df.samples$theta.certainly),3)), size = 5)+
   xlab("P(s)")+
   ylab("cumulative density")+
   theme_bw()+
@@ -208,10 +217,9 @@ cs.plot <- ggplot(data=df.cs.th[seq(1, nrow(df.cs.th), 15), ])+
                       values=c("pos" = "firebrick", "pro"="forestgreen", "cer"="dodgerblue4"),
                       labels=c("pos"="possibly","pro"="probably", "cer"="certainly"))+
   scale_shape_manual(name="expression",
-                     values=c("pos" = 15, "pro"=16, "cer"=17),
-                     labels=c("pos"="possibly","pro"="probably", "cer"="certainly"))
+                      values=c("pos" = 15, "pro"=16, "cer"=17),
+                      labels=c("pos"="possibly","pro"="probably", "cer"="certainly"))
 show(cs.plot)
-
 
 # once the df is saved, we can start from here:
 samples=read.csv("df_samples.csv")
@@ -225,8 +233,20 @@ mean(samples$beta)
 HDIofMCMC(samples$beta)
 mean(samples$beta_ax)
 HDIofMCMC(samples$beta_ax)
+
+mean(samples$kappa)
+HDIofMCMC(samples$kappa)
+mean(samples$kappa_ax)
+HDIofMCMC(samples$kappa_ax)
+
+mean(samples$omega)
+HDIofMCMC(samples$omega)
+mean(samples$omega_ax)
+HDIofMCMC(samples$omega_ax)
+
 mean(samples$lambda)
 HDIofMCMC(samples$lambda)
+
 mean(samples$theta.possibly)
 HDIofMCMC(samples$theta.possibly)
 mean(samples$theta.probably)
