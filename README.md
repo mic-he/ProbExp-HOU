@@ -1,6 +1,6 @@
 # Probability Expressions & High-Order Uncertainty
 
-Public repository for the paper ''Complex probability expressions & high-order uncertainty: compositional semantics, probabilistic pragmatics & experimental data'' by Michele Herbstritt and Michael Franke.
+Public repository for the paper ''Complex probability expressions & high-order uncertainty: compositional semantics, probabilistic pragmatics & experimental data'' by Michele Herbstritt and Michael Franke (under review).
 
 - Experiments: psiTurk (HTML+JS) implementations of three experimental studies run on Amazon's Mechanical Turk.
 
