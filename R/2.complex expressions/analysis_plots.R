@@ -172,6 +172,8 @@ j.samples=jags(data=dataList,
                n.chains=2, n.iter=5000, # how many chain, how many iterations? 
                n.burnin=2500, n.thin=1, DIC=T) # burn in, thinning values, compute DIC
 
+stop()
+
 # visualize summary about parameter
 j.samples
 
