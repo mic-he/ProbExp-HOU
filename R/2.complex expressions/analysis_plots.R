@@ -22,10 +22,10 @@ source("prediction_functions.R") # the prediction functions, ie R implementation
 # get data
 df.production <- read.csv("clean_production_data.csv") # output of processing raw data from the production task
 df.interpretation <- read.csv("clean_interpretation_data.csv") # output of processing raw data from the insterpretation task
-df.e.cis <- read.csv("complex_production_cis.csv") # output of bootstrapping 95% cis from production data
-df.s.cis <- read.csv("complex_interpretation_state_cis.csv") # output of bootstrapping 95% cis from interpr. data
-df.a.cis <- read.csv("complex_interpretation_access_cis.csv") # output of bootstrapping 95% cis from interpr. data
-df.o.cis <- read.csv("complex_interpretation_observation_cis.csv") # output of bootstrapping 95% cis from interpr. data
+# df.e.cis <- read.csv("complex_production_cis.csv") # output of bootstrapping 95% cis from production data
+# df.s.cis <- read.csv("complex_interpretation_state_cis.csv") # output of bootstrapping 95% cis from interpr. data
+# df.a.cis <- read.csv("complex_interpretation_access_cis.csv") # output of bootstrapping 95% cis from interpr. data
+# df.o.cis <- read.csv("complex_interpretation_observation_cis.csv") # output of bootstrapping 95% cis from interpr. data
 
 ## basic set up of the model
 n=10 # balls in the urn
@@ -170,7 +170,9 @@ j.samples=jags(data=dataList,
                parameters.to.save = parameters,
                model.file = model,
                n.chains=2, n.iter=5000, # how many chain, how many iterations? 
-               n.burnin=2500, n.thin=1, DIC=F) # burn in, thinning values, compute DIC
+               n.burnin=2500, n.thin=1, DIC=T) # burn in, thinning values, compute DIC
+
+stop()
 
 # visualize summary about parameter
 j.samples
